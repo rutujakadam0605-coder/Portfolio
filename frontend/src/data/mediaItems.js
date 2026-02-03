@@ -50,14 +50,16 @@
 
 // frontend/src/data/mediaItems.js
 import axios from "axios";
-const API_BASE = "https://ram-portfolio-1.onrender.com";
+
+// ✅ Always use env-based backend URL
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export async function mediaItems() {
   try {
-    const res = await axios.get(API_BASE);
-    return res.data; // returns array of media objects
+    const res = await axios.get(`${API_BASE}/api/media`);
+    return res.data || [];
   } catch (err) {
-    console.error("❌ Failed to fetch media:", err.message);
+    console.error("❌ Failed to fetch media:", err);
     return [];
   }
 }
