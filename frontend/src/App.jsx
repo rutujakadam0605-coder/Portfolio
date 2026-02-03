@@ -6,7 +6,7 @@ import Graphic from "./pages/Graphic.jsx";
 import Video from "./pages/Video.jsx";
 import UiDesign from "./pages/UiDesign.jsx";
 import Logos from "./pages/Logos.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
+
 
 import Navbar from "./components/Navbar.jsx";
 import HeroSearch from "./components/HeroSearch.jsx";
@@ -52,7 +52,6 @@ function App() {
         <Route path="/video" element={<Video selectedTag={selectedTag} searchQuery={searchQuery} category="video" />} />
         <Route path="/uidesign" element={<UiDesign selectedTag={selectedTag} searchQuery={searchQuery} category="uidesign" />} />
         <Route path="/logos" element={<Logos selectedTag={selectedTag} searchQuery={searchQuery} category="logos" />} />
-        <Route path="/AdminDashboard" element={<AdminDashboard/>} />
       </Routes>
     </>
   );
