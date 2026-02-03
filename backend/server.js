@@ -15,7 +15,7 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors({ origin: ["http://localhost:5173", "http://localhost:5174"], credentials: true }));
+app.use(cors({ origin: process.env.CLIENT_ORIGIN, credentials: true }));
 app.use("/api/brochure", brochureRoutes);
 
 app.use(morgan("dev"));
