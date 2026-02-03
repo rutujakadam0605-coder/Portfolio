@@ -50,10 +50,11 @@
 
 // frontend/src/data/mediaItems.js
 import axios from "axios";
+const API_BASE = "https://ram-portfolio-1.onrender.com";
 
 export async function mediaItems() {
   try {
-    const res = await axios.get("https://ram-portfolio-1.onrender.com");
+    const res = await axios.get(API_BASE);
     return res.data; // returns array of media objects
   } catch (err) {
     console.error("❌ Failed to fetch media:", err.message);
