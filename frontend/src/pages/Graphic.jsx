@@ -3,7 +3,9 @@ import axios from "axios";
 import Masonry from "react-masonry-css";
 
 const breakpointColumnsObj = { default: 4, 1100: 3, 700: 2, 500: 1 };
-const API_BASE = "https://ram-portfolio-1.onrender.com";
+
+// ✅ Always use env-based backend URL
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const Graphic = ({ selectedTag, searchQuery }) => {
   const [graphicItems, setGraphicItems] = useState([]);
@@ -11,27 +13,37 @@ const Graphic = ({ selectedTag, searchQuery }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(API_BASE);
-        // Filter only graphics
-        setGraphicItems(res.data.filter(item => item.type.toLowerCase() === "graphic"));
+        const res = await axios.get(`${API_BASE}/api/media`);
+
+        // ✅ Filter only graphic items safely
+        setGraphicItems(
+          (res.data || []).filter(
+            (item) => item.type?.toLowerCase() === "graphic"
+          )
+        );
       } catch (err) {
         console.error("Failed to fetch media:", err);
       }
     };
+
     fetchData();
   }, []);
 
   let filteredItems = graphicItems;
 
   if (selectedTag && selectedTag !== "All") {
-    filteredItems = filteredItems.filter(item =>
-      item.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
+    filteredItems = filteredItems.filter((item) =>
+      item.tags?.some(
+        (tag) => tag.toLowerCase() === selectedTag.toLowerCase()
+      )
     );
   }
 
   if (searchQuery && searchQuery.trim() !== "") {
-    filteredItems = filteredItems.filter(item =>
-      item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    filteredItems = filteredItems.filter((item) =>
+      item.tags?.some((tag) =>
+        tag.toLowerCase().includes(searchQuery.toLowerCase())
+      )
     );
   }
 
@@ -43,9 +55,16 @@ const Graphic = ({ selectedTag, searchQuery }) => {
         columnClassName="my-masonry-grid_column"
       >
         {filteredItems.map((item) => (
-          <div key={item._id || item.url} className="overflow-hidden rounded-lg shadow-lg mb-4">
+          <div
+            key={item._id || item.url}
+            className="overflow-hidden rounded-lg shadow-lg mb-4"
+          >
             <img
-              src={item.url.startsWith("http") ? item.url : `http://localhost:5000${item.url}`}
+              src={
+                item.url.startsWith("http")
+                  ? item.url
+                  : `${API_BASE}${item.url}`
+              }
               alt={item.title || "Graphic"}
               className="w-full h-auto object-cover"
               onError={(e) => (e.target.src = "/fallback.png")}
