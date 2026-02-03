@@ -3,6 +3,7 @@ import axios from "axios";
 import Masonry from "react-masonry-css";
 
 const breakpointColumnsObj = { default: 4, 1100: 3, 700: 2, 500: 1 };
+const API_BASE = "https://ram-portfolio-1.onrender.com";
 
 const Graphic = ({ selectedTag, searchQuery }) => {
   const [graphicItems, setGraphicItems] = useState([]);
@@ -10,7 +11,7 @@ const Graphic = ({ selectedTag, searchQuery }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/media");
+        const res = await axios.get(API_BASE);
         // Filter only graphics
         setGraphicItems(res.data.filter(item => item.type.toLowerCase() === "graphic"));
       } catch (err) {
