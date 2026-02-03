@@ -3,18 +3,16 @@ import axios from "axios";
 import Masonry from "react-masonry-css";
 
 const breakpointColumnsObj = { default: 4, 1100: 3, 700: 2, 500: 1 };
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const Home = ({ selectedTag, searchQuery }) => {
   const [homeItems, setHomeItems] = useState([]);
 
-  useEffect(() => {
-    console.log("API BASE:", import.meta.env.VITE_API_BASE_URL);
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/media");
+        const res = await axios.get(`${API_BASE}/api/media`);
         setHomeItems(res.data);
       } catch (err) {
         console.error("Failed to fetch media:", err);
@@ -48,13 +46,13 @@ const Home = ({ selectedTag, searchQuery }) => {
           <div key={item._id || item.url} className="overflow-hidden rounded-lg shadow-lg mb-4">
             {item.isVideo ? (
               <video
-                src={item.url.startsWith("http") ? item.url : `http://localhost:5000${item.url}`}
+                src={item.url.startsWith("http") ? item.url : `API_BASE${item.url}`}
                 controls
                 className="w-full h-auto object-cover"
               />
             ) : (
               <img
-                src={item.url.startsWith("http") ? item.url : `http://localhost:5000${item.url}`}
+                src={item.url.startsWith("http") ? item.url : `API_BASE${item.url}`}
                 alt={item.title}
                 className="w-full h-auto object-cover"
                 onError={e => (e.target.src = "/fallback.png")}
