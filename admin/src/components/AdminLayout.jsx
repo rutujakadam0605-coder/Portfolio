@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Masonry from "react-masonry-css";
 
-const API_BASE = "https://ram-portfolio-1.onrender.com";
-const BROCHURE_API = "https://ram-portfolio-1.onrender.com";
-
 const breakpointColumnsObj = { default: 4, 1100: 3, 700: 2, 500: 1 };
 
-// Type options and corresponding tags
+// ✅ ENV-BASED API
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+// Type options and tags
 const typeOptions = {
   Graphic: ["illustration", "poster", "flyer", "digital art"],
   Video: ["intro", "trailer", "ad", "animation"],
@@ -23,16 +23,15 @@ const AdminLayout = () => {
   const [externalUrl, setExternalUrl] = useState("");
   const [notification, setNotification] = useState("");
 
-  /* ------------------ helpers ------------------ */
   const showNotification = (msg) => {
     setNotification(msg);
     setTimeout(() => setNotification(""), 3000);
   };
 
-  /* ------------------ fetch media ------------------ */
+  /* ================= FETCH MEDIA ================= */
   const fetchMedia = async () => {
     try {
-      const res = await axios.get(API_BASE);
+      const res = await axios.get(`${API_BASE}/api/media`);
       setMedia(res.data || []);
     } catch (err) {
       console.error(err);
@@ -44,7 +43,7 @@ const AdminLayout = () => {
     fetchMedia();
   }, []);
 
-  /* ------------------ media upload ------------------ */
+  /* ================= MEDIA UPLOAD ================= */
   const handleUpload = async (e) => {
     e.preventDefault();
 
@@ -61,13 +60,13 @@ const AdminLayout = () => {
         formData.append("tags", tags.join(","));
         formData.append("isVideo", type === "Video");
 
-        await axios.post(`${API_BASE}/upload`, formData, {
+        await axios.post(`${API_BASE}/api/media/upload`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
         showNotification("✅ File uploaded successfully");
       } else {
-        await axios.post(`${API_BASE}/upload-url`, {
+        await axios.post(`${API_BASE}/api/media/upload-url`, {
           type: type.toLowerCase(),
           tags,
           url: externalUrl,
@@ -87,10 +86,10 @@ const AdminLayout = () => {
     }
   };
 
-  /* ------------------ delete media ------------------ */
+  /* ================= DELETE MEDIA ================= */
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${API_BASE}/${id}`);
+      await axios.delete(`${API_BASE}/api/media/${id}`);
       setMedia((prev) => prev.filter((m) => m._id !== id));
       showNotification("🗑️ Deleted successfully");
     } catch (err) {
@@ -99,7 +98,7 @@ const AdminLayout = () => {
     }
   };
 
-  /* ------------------ brochure upload ------------------ */
+  /* ================= BROCHURE UPLOAD ================= */
   const handleBrochureUpload = async (e) => {
     e.preventDefault();
 
@@ -110,7 +109,7 @@ const AdminLayout = () => {
     formData.append("file", file);
 
     try {
-      await axios.post(`${BROCHURE_API}/upload`, formData, {
+      await axios.post(`${API_BASE}/api/brochure/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -121,19 +120,18 @@ const AdminLayout = () => {
     }
   };
 
-  /* ------------------ UI ------------------ */
+  /* ================= UI ================= */
   return (
     <div className="p-8 max-w-6xl mx-auto text-white">
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
 
-      {/* Notification */}
       {notification && (
         <div className="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50">
           {notification}
         </div>
       )}
 
-      {/* ================= BROCHURE UPLOAD ================= */}
+      {/* BROCHURE */}
       <form
         onSubmit={handleBrochureUpload}
         className="mb-8 p-4 bg-gray-900 border border-yellow-500 rounded"
@@ -157,7 +155,7 @@ const AdminLayout = () => {
         </button>
       </form>
 
-      {/* ================= MEDIA UPLOAD ================= */}
+      {/* MEDIA UPLOAD */}
       <form
         onSubmit={handleUpload}
         className="mb-6 space-y-4 p-4 bg-gray-800 rounded"
@@ -216,20 +214,23 @@ const AdminLayout = () => {
         </button>
       </form>
 
-      {/* ================= MEDIA GALLERY ================= */}
+      {/* MEDIA GALLERY */}
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column"
       >
         {media.map((item) => (
-          <div key={item._id} className="bg-gray-700 rounded overflow-hidden mb-4">
+          <div
+            key={item._id}
+            className="bg-gray-700 rounded overflow-hidden mb-4"
+          >
             {item.isVideo ? (
               <video
                 src={
                   item.url.startsWith("http")
                     ? item.url
-                    : `http://localhost:5000${item.url}`
+                    : `${API_BASE}${item.url}`
                 }
                 controls
                 className="w-full h-auto object-cover"
@@ -239,7 +240,7 @@ const AdminLayout = () => {
                 src={
                   item.url.startsWith("http")
                     ? item.url
-                    : `http://localhost:5000${item.url}`
+                    : `${API_BASE}${item.url}`
                 }
                 alt={item.title}
                 className="w-full h-auto object-cover"
@@ -249,7 +250,7 @@ const AdminLayout = () => {
             <div className="p-2">
               <p className="text-sm">Type: {item.type}</p>
               <p className="text-xs text-gray-300">
-                Tags: {item.tags.join(", ")}
+                Tags: {(item.tags || []).join(", ")}
               </p>
 
               <button
