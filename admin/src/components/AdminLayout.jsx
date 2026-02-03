@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Masonry from "react-masonry-css";
 
-const API_BASE = "http://localhost:5000/api/media";
-const BROCHURE_API = "http://localhost:5000/api/brochure";
+const API_BASE = "https://ram-portfolio-1.onrender.com";
+const BROCHURE_API = "https://ram-portfolio-1.onrender.com";
 
 const breakpointColumnsObj = { default: 4, 1100: 3, 700: 2, 500: 1 };
 
