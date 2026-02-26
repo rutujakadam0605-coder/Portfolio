@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-{/* import logo from "../assets/Nexvel ai 2.png"; */}
+import logo from "../assets/Nexvel ai 2.png"; 
 
 export default function Navbar({ setCategory }) {
   const [navbarOpen, setNavbarOpen] = useState(false);
@@ -16,11 +16,11 @@ export default function Navbar({ setCategory }) {
     <nav className="bg-black1 border-gray-200 dark:border-gray-700">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
         
-        {/* Logo 
+        {/* Logo */}
         <Link to="/" onClick={() => handleNavClick("home", "/")} className="flex items-center space-x-3 rtl:space-x-reverse">
           <img src={logo} className="h-12" alt="Nexvel AI Logo" />
         </Link>
-        */}
+        
 
         {/* Mobile menu button */}
         <button
