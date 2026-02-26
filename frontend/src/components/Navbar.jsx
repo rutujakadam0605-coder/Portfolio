@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/Nexvel ai 2.png";
+{/* import logo from "../assets/Nexvel ai 2.png"; */}
 
 export default function Navbar({ setCategory }) {
   const [navbarOpen, setNavbarOpen] = useState(false);
