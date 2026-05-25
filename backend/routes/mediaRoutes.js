@@ -38,7 +38,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /* -----------------------------
-   Upload Media
+   Upload media
 ----------------------------- */
 
 router.post(
@@ -61,8 +61,6 @@ router.post(
 
       const file = req.file;
 
-      /* Safe folder mapping */
-
       const folderMap = {
         graphic: "graphic",
         video: "video",
@@ -72,52 +70,38 @@ router.post(
       };
 
       const folder =
-        folderMap[
-          type?.toLowerCase()
-        ] || "graphic";
-
-      /* Safe filename */
+        folderMap[type?.toLowerCase()] ||
+        "graphic";
 
       const safeFileName =
         `${Date.now()}-${file.originalname}`
           .replace(/\s+/g, "-")
           .replace(/[^\w.-]/g, "");
 
-      /* Upload to Supabase */
-
-      const {
-        data,
-        error,
-      } = await supabase.storage
-        .from("media")
-        .upload(
-          `${folder}/${safeFileName}`,
-          fs.readFileSync(
-            file.path
-          ),
-          {
-            contentType:
-              file.mimetype,
-            upsert: true,
-          }
-        );
+      const { data, error } =
+        await supabase.storage
+          .from("media")
+          .upload(
+            `${folder}/${safeFileName}`,
+            fs.readFileSync(file.path),
+            {
+              contentType:
+                file.mimetype,
+              upsert: true,
+            }
+          );
 
       if (error) {
         throw error;
       }
 
-      /* Public URL */
-
       const {
-        data:
-          publicUrlData,
+        data: publicUrlData,
       } = supabase.storage
         .from("media")
         .getPublicUrl(
           data.path
         );
-
-      /* Save in Mongo */
 
       const mediaDoc =
         await Media.create({
@@ -133,12 +117,9 @@ router.post(
           url:
             publicUrlData.publicUrl,
           isVideo:
-            isVideo ===
-              "true" ||
+            isVideo === "true" ||
             isVideo === true,
         });
-
-      /* Remove temp file */
 
       if (
         fs.existsSync(
@@ -150,37 +131,24 @@ router.post(
         );
       }
 
-      res
+      return res
         .status(201)
         .json(mediaDoc);
 
     } catch (err) {
-  console.error(
-    "========== UPLOAD ERROR =========="
-  );
+      console.error(
+        "========== UPLOAD ERROR =========="
+      );
 
-  console.error(
-    JSON.stringify(err, null, 2)
-  );
+      console.error(err);
 
-  console.error(
-    "MESSAGE:",
-    err?.message
-  );
-
-  console.error(
-    "STACK:",
-    err?.stack
-  );
-
-  res.status(500).json({
-    message: "Upload failed",
-    error:
-      err?.message ||
-      "Unknown error",
-    details: err
-  });
-}
+      return res.status(500).json({
+        message:
+          "Upload failed",
+        error:
+          err?.message ||
+          "Unknown error",
+      });
     }
   }
 );
@@ -214,8 +182,7 @@ router.post(
                 )
             : [],
           isVideo:
-            isVideo ===
-              "true" ||
+            isVideo === "true" ||
             isVideo === true,
         });
 
@@ -235,7 +202,7 @@ router.post(
 );
 
 /* -----------------------------
-   Get Media
+   Get media
 ----------------------------- */
 
 router.get(
@@ -248,9 +215,7 @@ router.get(
             createdAt: -1,
           });
 
-      res.json(
-        media
-      );
+      res.json(media);
 
     } catch (err) {
       res.status(500).json({
@@ -262,7 +227,7 @@ router.get(
 );
 
 /* -----------------------------
-   Delete Media
+   Delete media
 ----------------------------- */
 
 router.delete(
@@ -275,12 +240,10 @@ router.delete(
         );
 
       if (!deleted) {
-        return res
-          .status(404)
-          .json({
-            message:
-              "Media not found",
-          });
+        return res.status(404).json({
+          message:
+            "Media not found",
+        });
       }
 
       res.json({
