@@ -61,13 +61,6 @@ app.use("/api/brochure", brochureRoutes);
 
 /* ====================== FRONTEND BUILD ====================== */
 
-/*
-Change this path if your frontend folder name differs.
-
-Current frontend package name:
-nexvel
-*/
-
 app.use(
   express.static(
     path.join(__dirname, "../nexvel/dist")
@@ -76,7 +69,7 @@ app.use(
 
 /* React Router refresh support */
 
-app.get("*", (req, res) => {
+app.use((req, res) => {
   res.sendFile(
     path.join(
       __dirname,
