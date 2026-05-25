@@ -162,10 +162,10 @@ const AdminLayout = () => {
       fetchMedia();
 
     } ccatch (err) {
-  console.error(
-    "UPLOAD ERROR:",
-    err?.response?.data || err
-  );
+  console.log(
+  "FULL ERROR:",
+  err.response?.data
+);
 
   showNotification(
     `❌ ${
