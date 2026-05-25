@@ -3,7 +3,6 @@ import cors from "cors";
 import morgan from "morgan";
 import path from "path";
 import dotenv from "dotenv";
-import { fileURLToPath } from "url";
 
 import connectDB from "./config/db.js";
 import mediaRoutes from "./routes/mediaRoutes.js";
@@ -11,9 +10,6 @@ import brochureRoutes from "./routes/brochureRoutes.js";
 
 dotenv.config();
 connectDB();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -26,7 +22,6 @@ const allowedOrigins = process.env.CLIENT_ORIGIN
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow Postman / Render checks
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
@@ -59,23 +54,10 @@ app.set("etag", false);
 app.use("/api/media", mediaRoutes);
 app.use("/api/brochure", brochureRoutes);
 
-/* ====================== FRONTEND BUILD ====================== */
+/* ====================== HEALTH ====================== */
 
-app.use(
-  express.static(
-    path.join(__dirname, "../nexvel/dist")
-  )
-);
-
-/* React Router refresh support */
-
-app.use((req, res) => {
-  res.sendFile(
-    path.join(
-      __dirname,
-      "../nexvel/dist/index.html"
-    )
-  );
+app.get("/", (req, res) => {
+  res.send("Backend running 🚀");
 });
 
 /* ====================== START SERVER ====================== */
