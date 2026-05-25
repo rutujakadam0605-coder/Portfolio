@@ -13,6 +13,7 @@ const typeOptions = {
   Video: ["intro", "trailer", "ad", "animation"],
   UiDesign: ["wireframe", "mockup", "landingpage", "prototype"],
   Logos: ["minimal", "vintage", "mascot", "typography"],
+  presentation: ["All", "Crypto", "Forex", "RealEstate", "Agriculture", "Corporate"],
 };
 
 const AdminLayout = () => {
