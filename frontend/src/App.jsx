@@ -54,7 +54,7 @@ function App() {
         <Route path="/video" element={<Video selectedTag={selectedTag} searchQuery={searchQuery} category="video" />} />
         <Route path="/uidesign" element={<UiDesign selectedTag={selectedTag} searchQuery={searchQuery} category="uidesign" />} />
         <Route path="/logos" element={<Logos selectedTag={selectedTag} searchQuery={searchQuery} category="logos" />} />
-        <Route path="/presentation" element={<Presentations selectedTag={selectedTag} searchQuery={searchQuery} category="presentation" />} />
+        <Route path="/presentation" element={<Presentation selectedTag={selectedTag} searchQuery={searchQuery} category="presentation" />} />
       </Routes>
     </>
   );
