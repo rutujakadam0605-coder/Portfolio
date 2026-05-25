@@ -101,22 +101,30 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 
     res.status(201).json(mediaDoc);
 
+  } router.post("/upload", upload.single("file"), async (req, res) => {
+  try {
+
+    // upload code here
+
+    res.status(201).json(mediaDoc);
+
   } catch (err) {
-  console.error("========== UPLOAD ERROR ==========");
-  console.error(err);
-  console.error("Message:", err.message);
+    console.error("========== UPLOAD ERROR ==========");
+    console.error(err);
+    console.error("Message:", err.message);
 
-  if (err.stack) {
-    console.error("Stack:", err.stack);
+    if (err.stack) {
+      console.error("Stack:", err.stack);
+    }
+
+    console.error("=================================");
+
+    res.status(500).json({
+      message: "Upload failed",
+      error: err.message,
+    });
   }
-
-  console.error("=================================");
-
-  res.status(500).json({
-    message: "Upload failed",
-    error: err.message,
-  });
-}
+});
 
 /* -------------------------------------------------
    Add external media
