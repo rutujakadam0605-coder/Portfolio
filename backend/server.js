@@ -12,14 +12,11 @@ import brochureRoutes from "./routes/brochureRoutes.js";
 dotenv.config();
 connectDB();
 
+/* ====================== FIX __dirname ====================== */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-
-/* ====================== FIX __dirname ====================== */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 /* ====================== CORS ====================== */
 const allowedOrigins = process.env.CLIENT_ORIGIN
