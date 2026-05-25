@@ -1,9 +1,9 @@
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
 import morgan from "morgan";
 import path from "path";
 import dotenv from "dotenv";
+import { fileURLToPath } from "url";
 
 import connectDB from "./config/db.js";
 import mediaRoutes from "./routes/mediaRoutes.js";
@@ -14,7 +14,11 @@ connectDB();
 
 const app = express();
 
-/* ====================== CORS (FIXED) ====================== */
+/* ====================== FIX __dirname ====================== */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+/* ====================== CORS ====================== */
 const allowedOrigins = process.env.CLIENT_ORIGIN
   ? process.env.CLIENT_ORIGIN.split(",")
   : [];
@@ -22,14 +26,12 @@ const allowedOrigins = process.env.CLIENT_ORIGIN
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow server-to-server, Postman, Render health checks
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
-      } else {
-        return callback(new Error("Not allowed by CORS"));
-      }
+
+      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
   })
@@ -43,19 +45,28 @@ app.use(express.urlencoded({ extended: true }));
 /* ====================== STATIC FILES ====================== */
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-/* Disable ETag to prevent 304 cache issues */
 app.set("etag", false);
 
-/* ====================== ROUTES ====================== */
+/* ====================== API ROUTES ====================== */
 app.use("/api/media", mediaRoutes);
 app.use("/api/brochure", brochureRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Media API running");
+/* ====================== REACT BUILD ====================== */
+
+// Adjust path if your frontend build folder differs
+app.use(express.static(path.join(__dirname, "client/dist")));
+
+/* Catch all frontend routes */
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "client/dist/index.html")
+  );
 });
 
 /* ====================== START SERVER ====================== */
+
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
