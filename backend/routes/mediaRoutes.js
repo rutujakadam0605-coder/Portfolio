@@ -6,19 +6,21 @@ import supabase from "../config/supabase.js";
 
 const router = express.Router();
 
-/* -----------------------------
-   Temp upload folder
------------------------------ */
+/* --------------------------------
+   Temp Upload Folder
+-------------------------------- */
 
 const uploadDir = "uploads";
 
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+  fs.mkdirSync(uploadDir, {
+    recursive: true,
+  });
 }
 
-/* -----------------------------
-   Multer config
------------------------------ */
+/* --------------------------------
+   Multer
+-------------------------------- */
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -29,17 +31,20 @@ const storage = multer.diskStorage({
     const uniqueName =
       Date.now() +
       "-" +
-      file.originalname.replace(/\s+/g, "-");
+      file.originalname
+        .replace(/\s+/g, "-");
 
     cb(null, uniqueName);
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+});
 
-/* -----------------------------
-   Upload media
------------------------------ */
+/* --------------------------------
+   Upload Media
+-------------------------------- */
 
 router.post(
   "/upload",
@@ -54,98 +59,149 @@ router.post(
       } = req.body;
 
       if (!req.file) {
-        return res.status(400).json({
-          message: "File required",
-        });
+        return res
+          .status(400)
+          .json({
+            message:
+              "File required",
+          });
       }
 
-      const file = req.file;
+      const file =
+        req.file;
+
+      /* Folder map */
 
       const folderMap = {
-        graphic: "graphic",
-        video: "video",
-        uidesign: "uidesign",
-        logos: "logos",
-        presentation: "presentation",
+        graphic:
+          "graphic",
+
+        video:
+          "video",
+
+        uidesign:
+          "uidesign",
+
+        logos:
+          "logos",
+
+        presentation:
+          "presentation",
       };
 
-      /* Clean folder */
+      const folder =
+        folderMap[
+          type?.toLowerCase()
+        ] || "graphic";
 
-const folder =
-  String(
-    folderMap[
-      type?.toLowerCase()
-    ] || "graphic"
-  )
-  .trim()
-  .toLowerCase();
+      /* Safe extension */
 
-/* Clean filename */
+      const extension =
+        file.originalname
+          .split(".")
+          .pop()
+          ?.toLowerCase();
 
-const extension =
-  file.originalname
-    .split(".")
-    .pop();
+      /* Safe filename */
 
-const safeFileName =
-  `${Date.now()}.${extension}`;
+      const fileName =
+        `${Date.now()}.${extension}`;
 
-/* Final path */
+      /* Final path */
 
-const uploadPath =
-  `${folder}/${safeFileName}`;
+      const uploadPath =
+        `${folder}/${fileName}`;
 
-console.log(
-  "UPLOAD PATH:",
-  uploadPath
-);
+      console.log(
+        "UPLOAD PATH:",
+        uploadPath
+      );
 
-/* Upload */
+      /* Read file */
 
-const { data, error } =
-  await supabase.storage
-    .from("media")
-    .upload(
-      uploadPath,
-      fs.readFileSync(
-        file.path
-      ),
-      {
-        contentType:
-          file.mimetype,
-        upsert: true,
-      }
-    );
+      const fileBuffer =
+        fs.readFileSync(
+          file.path
+        );
+
+      /* Upload */
+
+      const {
+        data,
+        error,
+      } =
+        await supabase.storage
+          .from(
+            "media"
+          )
+          .upload(
+            uploadPath,
+            fileBuffer,
+            {
+              contentType:
+                file.mimetype,
+
+              upsert:
+                true,
+            }
+          );
 
       if (error) {
+        console.log(
+          "SUPABASE ERROR:",
+          error
+        );
+
         throw error;
       }
 
+      /* Public URL */
+
       const {
-        data: publicUrlData,
-      } = supabase.storage
-        .from("media")
-        .getPublicUrl(
-          data.path
-        );
+        data:
+          publicUrlData,
+      } =
+        supabase.storage
+          .from(
+            "media"
+          )
+          .getPublicUrl(
+            data.path
+          );
+
+      /* Save in Mongo */
 
       const mediaDoc =
         await Media.create({
           title,
+
           type,
-          tags: tags
-            ? tags
-                .split(",")
-                .map((t) =>
-                  t.trim()
-                )
-            : [],
+
+          tags:
+            tags
+              ? tags
+                  .split(
+                    ","
+                  )
+                  .map(
+                    (
+                      t
+                    ) =>
+                      t.trim()
+                  )
+              : [],
+
           url:
             publicUrlData.publicUrl,
+
           isVideo:
-            isVideo === "true" ||
-            isVideo === true,
+            isVideo ===
+              "true" ||
+            isVideo ===
+              true,
         });
+
+      /* Delete temp */
 
       if (
         fs.existsSync(
@@ -159,34 +215,43 @@ const { data, error } =
 
       return res
         .status(201)
-        .json(mediaDoc);
+        .json(
+          mediaDoc
+        );
 
     } catch (err) {
-      console.error(
-        "========== UPLOAD ERROR =========="
+
+      console.log(
+        "========== ERROR =========="
       );
 
-      console.error(err);
+      console.log(
+        err
+      );
 
-      return res.status(500).json({
-        message:
-          "Upload failed",
-        error:
-          err?.message ||
-          "Unknown error",
-      });
+      return res
+        .status(500)
+        .json({
+          message:
+            "Upload failed",
+
+          error:
+            err?.message ||
+            "Unknown error",
+        });
     }
   }
 );
 
-/* -----------------------------
-   External URL upload
------------------------------ */
+/* --------------------------------
+   Upload External URL
+-------------------------------- */
 
 router.post(
   "/upload-url",
   async (req, res) => {
     try {
+
       const {
         title,
         url,
@@ -200,88 +265,128 @@ router.post(
           title,
           url,
           type,
-          tags: tags
-            ? tags
-                .split(",")
-                .map((t) =>
-                  t.trim()
-                )
-            : [],
+
+          tags:
+            tags
+              ? tags
+                  .split(
+                    ","
+                  )
+                  .map(
+                    (
+                      t
+                    ) =>
+                      t.trim()
+                  )
+              : [],
+
           isVideo:
-            isVideo === "true" ||
-            isVideo === true,
+            isVideo ===
+              "true" ||
+            isVideo ===
+              true,
         });
 
-      res
+      return res
         .status(201)
-        .json(mediaDoc);
+        .json(
+          mediaDoc
+        );
 
     } catch (err) {
-      res.status(500).json({
-        message:
-          "Adding external media failed",
-        error:
-          err.message,
-      });
+
+      return res
+        .status(500)
+        .json({
+          message:
+            "Adding external media failed",
+
+          error:
+            err.message,
+        });
     }
   }
 );
 
-/* -----------------------------
-   Get media
------------------------------ */
+/* --------------------------------
+   Get Media
+-------------------------------- */
 
 router.get(
   "/",
-  async (req, res) => {
+  async (
+    req,
+    res
+  ) => {
     try {
+
       const media =
         await Media.find()
           .sort({
-            createdAt: -1,
+            createdAt:
+              -1,
           });
 
-      res.json(media);
+      res.json(
+        media
+      );
 
-    } catch (err) {
-      res.status(500).json({
-        message:
-          "Failed to fetch media",
-      });
+    } catch {
+
+      res
+        .status(500)
+        .json({
+          message:
+            "Failed to fetch media",
+        });
     }
   }
 );
 
-/* -----------------------------
-   Delete media
------------------------------ */
+/* --------------------------------
+   Delete Media
+-------------------------------- */
 
 router.delete(
   "/:id",
-  async (req, res) => {
+  async (
+    req,
+    res
+  ) => {
     try {
+
       const deleted =
         await Media.findByIdAndDelete(
           req.params.id
         );
 
-      if (!deleted) {
-        return res.status(404).json({
-          message:
-            "Media not found",
-        });
+      if (
+        !deleted
+      ) {
+        return res
+          .status(
+            404
+          )
+          .json({
+            message:
+              "Media not found",
+          });
       }
 
-      res.json({
-        message:
-          "Deleted successfully",
-      });
+      return res
+        .json({
+          message:
+            "Deleted successfully",
+        });
 
-    } catch (err) {
-      res.status(500).json({
-        message:
-          "Delete failed",
-      });
+    } catch {
+
+      return res
+        .status(500)
+        .json({
+          message:
+            "Delete failed",
+        });
     }
   }
 );
