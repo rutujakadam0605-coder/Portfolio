@@ -69,27 +69,53 @@ router.post(
         presentation: "presentation",
       };
 
-      const folder =
-        folderMap[type?.toLowerCase()] ||
-        "graphic";
+      /* Clean folder */
 
-      const safeFileName =
-        `${Date.now()}-${file.originalname}`
-          .replace(/\s+/g, "-")
-          .replace(/[^\w.-]/g, "");
+const folder =
+  String(
+    folderMap[
+      type?.toLowerCase()
+    ] || "graphic"
+  )
+  .trim()
+  .toLowerCase();
 
-      const { data, error } =
-        await supabase.storage
-          .from("media")
-          .upload(
-            `${folder}/${safeFileName}`,
-            fs.readFileSync(file.path),
-            {
-              contentType:
-                file.mimetype,
-              upsert: true,
-            }
-          );
+/* Clean filename */
+
+const extension =
+  file.originalname
+    .split(".")
+    .pop();
+
+const safeFileName =
+  `${Date.now()}.${extension}`;
+
+/* Final path */
+
+const uploadPath =
+  `${folder}/${safeFileName}`;
+
+console.log(
+  "UPLOAD PATH:",
+  uploadPath
+);
+
+/* Upload */
+
+const { data, error } =
+  await supabase.storage
+    .from("media")
+    .upload(
+      uploadPath,
+      fs.readFileSync(
+        file.path
+      ),
+      {
+        contentType:
+          file.mimetype,
+        upsert: true,
+      }
+    );
 
       if (error) {
         throw error;
