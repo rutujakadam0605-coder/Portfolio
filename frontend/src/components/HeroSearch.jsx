@@ -6,7 +6,7 @@ export default function HeroSearch({ tags, selectedTag, onTagClick, searchQuery,
     return(
         <section className="bg-gradient-to-r from-cyan-500 to-purple-600 p-10 rounded-2xl text-white text-center max-w-4xl mx-auto mt-10">
             <h1 className="text-3xl md:text-4xl font-bold mb-6">
-                Discover. Download. Design.
+                Building digital experiences with creativity, innovation, and purpose.
             </h1>
 
             {/* Search Box */}
