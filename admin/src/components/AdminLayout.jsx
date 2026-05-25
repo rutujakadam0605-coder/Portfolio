@@ -161,19 +161,26 @@ const AdminLayout = () => {
 
       fetchMedia();
 
-    } ccatch (err) {
-  console.log(
+} catch (err) {
+
+console.log(
   "FULL ERROR:",
   err.response?.data
 );
 
-  showNotification(
-    `❌ ${
-      err?.response?.data?.error ||
-      err?.message ||
-      "Upload failed"
-    }`
-  );
+console.error(
+  "UPLOAD ERROR:",
+  err?.response?.data || err
+);
+
+showNotification(
+  `❌ ${
+    err?.response?.data?.error ||
+    err?.message ||
+    "Upload failed"
+  }`
+);
+
 }
     }
   };
