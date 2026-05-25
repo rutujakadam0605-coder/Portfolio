@@ -68,123 +68,122 @@ const AdminLayout = () => {
   /* ================= MEDIA UPLOAD ================= */
 
   const handleUpload = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      if (!file && !externalUrl) {
-        return showNotification(
-          "Select file or URL"
-        );
-      }
+  try {
 
-      if (!tags.length) {
-        return showNotification(
-          "Select at least one tag"
-        );
-      }
-
-      if (file) {
-        const formData =
-          new FormData();
-
-        formData.append(
-          "file",
-          file
-        );
-
-        formData.append(
-          "title",
-          file.name.split(".")[0]
-        );
-
-        formData.append(
-          "type",
-          type.toLowerCase()
-        );
-
-        formData.append(
-          "tags",
-          tags.join(",")
-        );
-
-        formData.append(
-          "isVideo",
-          type === "Video"
-        );
-
-        await axios.post(
-          `${API_BASE}/api/media/upload`,
-          formData,
-          {
-            headers: {
-              "Content-Type":
-                "multipart/form-data",
-            },
-          }
-        );
-
-        showNotification(
-          "✅ File uploaded successfully"
-        );
-
-      } else {
-
-        await axios.post(
-          `${API_BASE}/api/media/upload-url`,
-          {
-            title:
-              externalUrl
-                .split("/")
-                .pop(),
-
-            type:
-              type.toLowerCase(),
-
-            tags,
-
-            url:
-              externalUrl,
-
-            isVideo:
-              type === "Video",
-          }
-        );
-
-        showNotification(
-          "✅ External media added"
-        );
-      }
-
-      setFile(null);
-      setExternalUrl("");
-      setTags([]);
-
-      fetchMedia();
-
-} catch (err) {
-
-console.log(
-  "FULL ERROR:",
-  err.response?.data
-);
-
-console.error(
-  "UPLOAD ERROR:",
-  err?.response?.data || err
-);
-
-showNotification(
-  `❌ ${
-    err?.response?.data?.error ||
-    err?.message ||
-    "Upload failed"
-  }`
-);
-
-}
+    if (!file && !externalUrl) {
+      return showNotification(
+        "Select file or URL"
+      );
     }
-  };
 
+    if (!tags.length) {
+      return showNotification(
+        "Select at least one tag"
+      );
+    }
+
+    if (file) {
+
+      const formData =
+        new FormData();
+
+      formData.append(
+        "file",
+        file
+      );
+
+      formData.append(
+        "title",
+        file.name.split(".")[0]
+      );
+
+      formData.append(
+        "type",
+        type.toLowerCase()
+      );
+
+      formData.append(
+        "tags",
+        tags.join(",")
+      );
+
+      formData.append(
+        "isVideo",
+        type === "Video"
+      );
+
+      await axios.post(
+        `${API_BASE}/api/media/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type":
+              "multipart/form-data",
+          },
+        }
+      );
+
+      showNotification(
+        "✅ File uploaded successfully"
+      );
+
+    } else {
+
+      await axios.post(
+        `${API_BASE}/api/media/upload-url`,
+        {
+          title:
+            externalUrl
+              .split("/")
+              .pop(),
+
+          type:
+            type.toLowerCase(),
+
+          tags,
+
+          url:
+            externalUrl,
+
+          isVideo:
+            type === "Video",
+        }
+      );
+
+      showNotification(
+        "✅ External media added"
+      );
+    }
+
+    setFile(null);
+    setExternalUrl("");
+    setTags([]);
+
+    fetchMedia();
+
+  } catch (err) {
+
+    console.log(
+      "FULL ERROR:",
+      err.response?.data
+    );
+
+    console.error(
+      "UPLOAD ERROR:",
+      err?.response?.data || err
+    );
+
+    showNotification(
+      `❌ ${
+        err?.response?.data?.error ||
+        err?.message ||
+        "Upload failed"
+      }`
+    );
+  }
+};
   /* ================= DELETE ================= */
 
   const handleDelete = async (id) => {
