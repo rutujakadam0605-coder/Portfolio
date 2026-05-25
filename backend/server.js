@@ -12,6 +12,9 @@ import brochureRoutes from "./routes/brochureRoutes.js";
 dotenv.config();
 connectDB();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 
 /* ====================== FIX __dirname ====================== */
@@ -60,6 +63,17 @@ app.use(express.static(path.join(__dirname, "client/dist")));
 app.get("*", (req, res) => {
   res.sendFile(
     path.join(__dirname, "client/dist/index.html")
+  );
+});
+
+/* ====================== FRONTEND ROUTES ====================== */
+
+// Change "nexvel" if your frontend folder has a different name
+app.use(express.static(path.join(__dirname, "../nexvel/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../nexvel/dist/index.html")
   );
 });
 
