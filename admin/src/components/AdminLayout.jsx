@@ -410,10 +410,14 @@ const AdminLayout = () => {
 
               {item.isVideo ? (
                 <video
-                  src={mediaUrl}
-                  controls
-                  className="w-full"
-                />
+                 src={mediaUrl}
+                 controls
+                 preload="metadata"
+                 muted={false}
+                 autoPlay={false}
+                 playsInline
+                 className="w-full"
+              />
               ) : (
                 <img
                   src={mediaUrl}
