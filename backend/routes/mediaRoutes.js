@@ -155,20 +155,32 @@ router.post(
         .json(mediaDoc);
 
     } catch (err) {
-      console.error(
-        "========== UPLOAD ERROR =========="
-      );
+  console.error(
+    "========== UPLOAD ERROR =========="
+  );
 
-      console.error(
-        err
-      );
+  console.error(
+    JSON.stringify(err, null, 2)
+  );
 
-      res.status(500).json({
-        message:
-          "Upload failed",
-        error:
-          err.message,
-      });
+  console.error(
+    "MESSAGE:",
+    err?.message
+  );
+
+  console.error(
+    "STACK:",
+    err?.stack
+  );
+
+  res.status(500).json({
+    message: "Upload failed",
+    error:
+      err?.message ||
+      "Unknown error",
+    details: err
+  });
+}
     }
   }
 );
