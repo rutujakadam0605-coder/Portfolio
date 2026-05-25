@@ -1,15 +1,31 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import AdminLayout from "./components/AdminLayout.jsx";
+import {
+  Routes,
+  Route,
+  Navigate
+} from "react-router-dom";
+
+import AdminLayout from "./components/AdminLayout";
 
 function App() {
-    return (
-    <>
-      <Routes>
-        <Route path="/" element={<Navigate to="/AdminLayout" />} />
-        <Route path="/AdminLayout" element={<AdminLayout category="AdminLayout" />} />
-      </Routes>
-    </>
+  return (
+    <Routes>
+
+      <Route
+        path="/"
+        element={
+          <Navigate to="/admin" />
+        }
+      />
+
+      <Route
+        path="/admin"
+        element={
+          <AdminLayout />
+        }
+      />
+
+    </Routes>
   );
-};
+}
 
 export default App;
