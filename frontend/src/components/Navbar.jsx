@@ -103,7 +103,18 @@ export default function Navbar({ setCategory }) {
                 className="flex items-center gap-1 py-2 px-3 text-gray-900 rounded-sm 
                            hover:text-[#FFD700] md:p-0 dark:text-white"
               >
-                LOGOS
+                Logos
+              </button>
+            </li>
+
+            {/* Presentation */}
+            <li>
+              <button
+                onClick={() => handleNavClick("presentation", "/presentation")}
+                className="flex items-center gap-1 py-2 px-3 text-gray-900 rounded-sm 
+                           hover:text-[#FFD700] md:p-0 dark:text-white"
+              >
+                Presentation
               </button>
             </li>
 
