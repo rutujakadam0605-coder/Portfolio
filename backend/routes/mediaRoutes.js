@@ -102,14 +102,21 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     res.status(201).json(mediaDoc);
 
   } catch (err) {
-    console.error("UPLOAD ERROR:", err);
+  console.error("========== UPLOAD ERROR ==========");
+  console.error(err);
+  console.error("Message:", err.message);
 
-    res.status(500).json({
-      message: "Upload failed",
-      error: err.message,
-    });
+  if (err.stack) {
+    console.error("Stack:", err.stack);
   }
-});
+
+  console.error("=================================");
+
+  res.status(500).json({
+    message: "Upload failed",
+    error: err.message,
+  });
+}
 
 /* -------------------------------------------------
    Add external media
