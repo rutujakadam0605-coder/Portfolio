@@ -6,6 +6,7 @@ import Graphic from "./pages/Graphic.jsx";
 import Video from "./pages/Video.jsx";
 import UiDesign from "./pages/UiDesign.jsx";
 import Logos from "./pages/Logos.jsx";
+import Presentation from "./pages/Presentation.jsx";
 
 
 import Navbar from "./components/Navbar.jsx";
@@ -14,7 +15,7 @@ import HeroSearch from "./components/HeroSearch.jsx";
 import "./index.css";
 
 function App() {
-  const [tags, setTags] = useState(["All", "graphic", "video", "uidesign", "logos"]);
+  const [tags, setTags] = useState(["All", "graphic", "video", "uidesign", "logos", "presentation"]);
   const [selectedTag, setSelectedTag] = useState("All");
   const [currentCategory, setCurrentCategory] = useState("home");
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,6 +26,7 @@ function App() {
     video: ["All", "Intro", "Trailer", "Ad", "Animation"],
     uidesign: ["All", "Wireframe", "Mockup", "Landing Page", "Prototype"],
     logos: ["All", "Minimal", "Vintage", "Mascot", "Typography"],
+    presentation: ["All", "Crypto", "Forex", "RealEstate", "Agriculture", "Corporate"],
   };
 
   const handleSetCategory = (category) => {
@@ -52,6 +54,7 @@ function App() {
         <Route path="/video" element={<Video selectedTag={selectedTag} searchQuery={searchQuery} category="video" />} />
         <Route path="/uidesign" element={<UiDesign selectedTag={selectedTag} searchQuery={searchQuery} category="uidesign" />} />
         <Route path="/logos" element={<Logos selectedTag={selectedTag} searchQuery={searchQuery} category="logos" />} />
+        <Route path="/presentation" element={<Presentations selectedTag={selectedTag} searchQuery={searchQuery} category="presentation" />} />
       </Routes>
     </>
   );
