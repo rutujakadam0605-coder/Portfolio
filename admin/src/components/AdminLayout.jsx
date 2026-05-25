@@ -42,7 +42,7 @@ const AdminLayout = () => {
     }, 3000);
   };
 
-  /* ================= FETCH ================= */
+  /* ================= FETCH MEDIA ================= */
 
   const fetchMedia = async () => {
     try {
@@ -54,7 +54,10 @@ const AdminLayout = () => {
 
     } catch (err) {
       console.error(err);
-      showNotification("❌ Failed to fetch media");
+
+      showNotification(
+        "❌ Failed to fetch media"
+      );
     }
   };
 
@@ -62,7 +65,7 @@ const AdminLayout = () => {
     fetchMedia();
   }, []);
 
-  /* ================= UPLOAD ================= */
+  /* ================= MEDIA UPLOAD ================= */
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -70,7 +73,7 @@ const AdminLayout = () => {
     try {
       if (!file && !externalUrl) {
         return showNotification(
-          "Select a file or external link"
+          "Select file or URL"
         );
       }
 
@@ -81,14 +84,14 @@ const AdminLayout = () => {
       }
 
       if (file) {
-        const formData = new FormData();
+        const formData =
+          new FormData();
 
         formData.append(
           "file",
           file
         );
 
-        // required by backend
         formData.append(
           "title",
           file.name.split(".")[0]
@@ -143,8 +146,7 @@ const AdminLayout = () => {
               externalUrl,
 
             isVideo:
-              type ===
-              "Video",
+              type === "Video",
           }
         );
 
@@ -189,7 +191,7 @@ const AdminLayout = () => {
       );
 
       showNotification(
-        "🗑️ Deleted successfully"
+        "🗑 Deleted successfully"
       );
 
     } catch (err) {
@@ -197,6 +199,55 @@ const AdminLayout = () => {
 
       showNotification(
         "❌ Delete failed"
+      );
+    }
+  };
+
+  /* ================= BROCHURE ================= */
+
+  const handleBrochureUpload = async (e) => {
+    e.preventDefault();
+
+    const brochureFile =
+      e.target.brochure.files[0];
+
+    if (!brochureFile) {
+      return showNotification(
+        "Please select PDF brochure"
+      );
+    }
+
+    const formData =
+      new FormData();
+
+    formData.append(
+      "file",
+      brochureFile
+    );
+
+    try {
+
+      await axios.post(
+        `${API_BASE}/api/brochure/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type":
+              "multipart/form-data",
+          },
+        }
+      );
+
+      showNotification(
+        "📄 Brochure uploaded"
+      );
+
+    } catch (err) {
+
+      console.error(err);
+
+      showNotification(
+        "❌ Brochure upload failed"
       );
     }
   };
@@ -213,6 +264,34 @@ const AdminLayout = () => {
           {notification}
         </div>
       )}
+
+      {/* BROCHURE */}
+
+      <form
+        onSubmit={handleBrochureUpload}
+        className="mb-8 p-4 bg-gray-900 border border-yellow-500 rounded"
+      >
+        <h2 className="text-lg font-semibold mb-2 text-yellow-400">
+          Upload / Replace Brochure (PDF)
+        </h2>
+
+        <input
+          type="file"
+          name="brochure"
+          accept="application/pdf"
+          className="block mb-3 text-sm text-gray-300"
+        />
+
+        <button
+          type="submit"
+          className="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded"
+        >
+          Upload Brochure
+        </button>
+
+      </form>
+
+      {/* MEDIA */}
 
       <form
         onSubmit={handleUpload}
@@ -246,14 +325,12 @@ const AdminLayout = () => {
             >
               <input
                 type="checkbox"
-                checked={tags.includes(
-                  tg
-                )}
+                checked={tags.includes(tg)}
                 onChange={(e) =>
                   e.target.checked
                     ? setTags([
                         ...tags,
-                        tg
+                        tg,
                       ])
                     : setTags(
                         tags.filter(
@@ -264,7 +341,7 @@ const AdminLayout = () => {
                 }
               />
 
-              <span className="capitalize">
+              <span>
                 {tg}
               </span>
             </label>
@@ -279,7 +356,6 @@ const AdminLayout = () => {
               e.target.files[0]
             )
           }
-          className="w-full"
         />
 
         <input
@@ -291,11 +367,10 @@ const AdminLayout = () => {
               e.target.value
             )
           }
-          className="border p-2 w-full rounded text-white bg-gray-700"
+          className="w-full p-2 rounded bg-gray-700"
         />
 
         <button
-          type="submit"
           className="bg-blue-600 px-4 py-2 rounded"
         >
           Upload Media
@@ -303,12 +378,13 @@ const AdminLayout = () => {
 
       </form>
 
+      {/* GALLERY */}
+
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column"
       >
-
         {media.map((item) => {
 
           const mediaUrl =
@@ -338,9 +414,7 @@ const AdminLayout = () => {
 
               <div className="p-2">
 
-                <p>
-                  {item.title}
-                </p>
+                <p>{item.title}</p>
 
                 <button
                   onClick={() =>
@@ -348,7 +422,7 @@ const AdminLayout = () => {
                       item._id
                     )
                   }
-                  className="bg-red-500 px-3 py-1 mt-2 rounded"
+                  className="bg-red-500 px-2 py-1 mt-2 rounded"
                 >
                   Delete
                 </button>
@@ -358,7 +432,6 @@ const AdminLayout = () => {
             </div>
           );
         })}
-
       </Masonry>
 
     </div>
