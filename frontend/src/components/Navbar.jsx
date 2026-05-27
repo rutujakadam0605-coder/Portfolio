@@ -130,7 +130,7 @@ export default function Navbar({ setCategory }) {
                            font-medium rounded-lg text-sm px-4 py-2 text-center
                            dark:focus:ring-yellow-800"
               >
-                Download Resume
+                Pricing & Services Brochure
               </button>
             </li>
 
