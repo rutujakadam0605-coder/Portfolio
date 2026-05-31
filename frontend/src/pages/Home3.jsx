@@ -9,6 +9,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const Home = ({ selectedTag, searchQuery }) => {
   const [homeItems, setHomeItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,8 +18,11 @@ const Home = ({ selectedTag, searchQuery }) => {
         setHomeItems(res.data || []);
       } catch (err) {
         console.error("Failed to fetch media:", err);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchData();
   }, []);
 
@@ -31,6 +35,7 @@ const Home = ({ selectedTag, searchQuery }) => {
         : item.tags?.some(
             (tag) => tag.toLowerCase() === selectedTag.toLowerCase()
           );
+
       if (!typeMatch) return false;
     }
 
@@ -38,11 +43,26 @@ const Home = ({ selectedTag, searchQuery }) => {
       const queryMatch = item.tags?.some((tag) =>
         tag.toLowerCase().includes(searchQuery.toLowerCase())
       );
+
       if (!queryMatch) return false;
     }
 
     return true;
   });
+
+  // ✅ Loading Screen
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="w-14 h-14 border-4 border-gray-300 border-t-black rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-gray-600 text-lg font-medium">
+            Loading Portfolio...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -75,6 +95,7 @@ const Home = ({ selectedTag, searchQuery }) => {
                 }
                 alt={item.title || "Media"}
                 className="w-full h-auto object-cover"
+                loading="lazy"
                 onError={(e) => (e.target.src = "/fallback.png")}
               />
             )}
