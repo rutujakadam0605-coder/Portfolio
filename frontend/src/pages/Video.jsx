@@ -87,6 +87,13 @@ export default function Video({
         {filteredItems.map(
           (item) => {
 
+            const aspectClass =
+  item.orientation === "vertical"
+    ? "aspect-[9/16]"
+    : item.orientation === "square"
+    ? "aspect-square"
+    : "aspect-video";
+
             const videoUrl =
               item.url.startsWith(
                 "http"
@@ -116,20 +123,22 @@ export default function Video({
 
                 {isExternalVideo ? (
 
-                  <div className="relative w-full aspect-[16/9]">
+                  <div
+  className={`relative w-full ${aspectClass}`}
+>
 
-                    <iframe
-                      src={videoUrl}
-                      title={
-                        item.title ||
-                        "Video"
-                      }
-                      className="absolute top-0 left-0 w-full h-full"
-                      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
+  <iframe
+    src={videoUrl}
+    title={
+      item.title ||
+      "Video"
+    }
+    className="absolute inset-0 w-full h-full"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowFullScreen
+  />
 
-                  </div>
+</div>
 
                 ) : (
 
