@@ -480,14 +480,15 @@ const AdminLayout = () => {
 
               {item.isVideo ? (
 
-  mediaUrl.includes("youtube.com/embed") ||
-  mediaUrl.includes("drive.google.com") ? (
+  const aspectClass =
+  item.orientation === "vertical"
+    ? "aspect-[9/16]"
+    : item.orientation === "square"
+    ? "aspect-square"
+    : "aspect-video";
 
-    <div
-  className="relative w-full"
-  style={{
-    aspectRatio: `${videoWidth} / ${videoHeight}`,
-  }}
+  <div
+  className={`relative w-full ${aspectClass}`}
 >
   <iframe
     src={mediaUrl}
