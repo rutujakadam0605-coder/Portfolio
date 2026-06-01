@@ -42,6 +42,18 @@ const upload = multer({
   storage,
 });
 
+const parseTags = (tags) => {
+  if (!tags) return [];
+
+  if (Array.isArray(tags)) {
+    return tags;
+  }
+
+  return tags
+    .split(",")
+    .map((t) => t.trim());
+};
+
 /* --------------------------------
    Upload Media
 -------------------------------- */
@@ -172,34 +184,15 @@ router.post(
       /* Save in Mongo */
 
       const mediaDoc =
-        await Media.create({
-          title,
-
-          type,
-
-          tags:
-            tags
-              ? tags
-                  .split(
-                    ","
-                  )
-                  .map(
-                    (
-                      t
-                    ) =>
-                      t.trim()
-                  )
-              : [],
-
-          url:
-            publicUrlData.publicUrl,
-
-          isVideo:
-            isVideo ===
-              "true" ||
-            isVideo ===
-              true,
-        });
+  await Media.create({
+    title,
+    type,
+    tags: parseTags(tags),
+    url: publicUrlData.publicUrl,
+    isVideo:
+      isVideo === "true" ||
+      isVideo === true,
+  });
 
       /* Delete temp */
 
@@ -261,31 +254,15 @@ router.post(
       } = req.body;
 
       const mediaDoc =
-        await Media.create({
-          title,
-          url,
-          type,
-
-          tags:
-            tags
-              ? tags
-                  .split(
-                    ","
-                  )
-                  .map(
-                    (
-                      t
-                    ) =>
-                      t.trim()
-                  )
-              : [],
-
-          isVideo:
-            isVideo ===
-              "true" ||
-            isVideo ===
-              true,
-        });
+  await Media.create({
+    title,
+    url,
+    type,
+    tags: parseTags(tags),
+    isVideo:
+      isVideo === "true" ||
+      isVideo === true,
+  });
 
       return res
         .status(201)
