@@ -456,12 +456,19 @@ const AdminLayout = () => {
   mediaUrl.includes("youtube.com/embed") ||
   mediaUrl.includes("drive.google.com") ? (
 
-    <iframe
-      src={mediaUrl}
-      title={item.title}
-      className="w-full h-52"
-      allowFullScreen
-    />
+    <div
+  className="relative w-full"
+  style={{
+    aspectRatio: `${videoWidth} / ${videoHeight}`,
+  }}
+>
+  <iframe
+    src={mediaUrl}
+    title={item.title}
+    className="absolute inset-0 w-full h-full"
+    allowFullScreen
+  />
+</div>
 
   ) : (
 
