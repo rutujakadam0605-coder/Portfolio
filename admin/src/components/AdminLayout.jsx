@@ -131,31 +131,74 @@ const AdminLayout = () => {
 
     } else {
 
-      await axios.post(
-        `${API_BASE}/api/media/upload-url`,
-        {
-          title:
-            externalUrl
-              .split("/")
-              .pop(),
+  let finalUrl = externalUrl;
 
-          type:
-            type.toLowerCase(),
+  /* YouTube */
 
-          tags,
+  if (
+    externalUrl.includes("youtu.be/")
+  ) {
+    const videoId =
+      externalUrl
+        .split("youtu.be/")[1]
+        ?.split("?")[0];
 
-          url:
-            externalUrl,
+    finalUrl =
+      `https://www.youtube.com/embed/${videoId}`;
+  }
 
-          isVideo:
-            type === "Video",
-        }
-      );
+  else if (
+    externalUrl.includes("youtube.com/watch?v=")
+  ) {
+    const videoId =
+      new URL(externalUrl)
+        .searchParams.get("v");
 
-      showNotification(
-        "✅ External media added"
-      );
+    finalUrl =
+      `https://www.youtube.com/embed/${videoId}`;
+  }
+
+  /* Google Drive */
+
+  else if (
+    externalUrl.includes(
+      "drive.google.com/file/d/"
+    )
+  ) {
+    const fileId =
+      externalUrl
+        .split("/file/d/")[1]
+        ?.split("/")[0];
+
+    finalUrl =
+      `https://drive.google.com/file/d/${fileId}/preview`;
+  }
+
+  await axios.post(
+    `${API_BASE}/api/media/upload-url`,
+    {
+      title:
+        finalUrl
+          .split("/")
+          .pop(),
+
+      type:
+        type.toLowerCase(),
+
+      tags,
+
+      url:
+        finalUrl,
+
+      isVideo:
+        type === "Video",
     }
+  );
+
+  showNotification(
+    "✅ External media added"
+  );
+}
 
     setFile(null);
     setExternalUrl("");
@@ -409,16 +452,31 @@ const AdminLayout = () => {
             >
 
               {item.isVideo ? (
-                <video
-                 src={mediaUrl}
-                 controls
-                 preload="metadata"
-                 muted={false}
-                 autoPlay={false}
-                 playsInline
-                 className="w-full"
-              />
-              ) : (
+
+  mediaUrl.includes("youtube.com/embed") ||
+  mediaUrl.includes("drive.google.com") ? (
+
+    <iframe
+      src={mediaUrl}
+      title={item.title}
+      className="w-full h-52"
+      allowFullScreen
+    />
+
+  ) : (
+
+    <video
+      src={mediaUrl}
+      controls
+      preload="metadata"
+      autoPlay={false}
+      playsInline
+      className="w-full"
+    />
+
+  )
+
+) : (
                 <img
                   src={mediaUrl}
                   alt={item.title}
