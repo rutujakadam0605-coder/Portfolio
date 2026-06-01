@@ -472,6 +472,13 @@ const AdminLayout = () => {
               ? item.url
               : `${API_BASE}${item.url}`;
 
+        const aspectClass =
+  item.orientation === "vertical"
+    ? "aspect-[9/16]"
+    : item.orientation === "square"
+    ? "aspect-square"
+    : "aspect-video";
+
           return (
             <div
               key={item._id}
@@ -480,12 +487,7 @@ const AdminLayout = () => {
 
               {item.isVideo ? (
 
-  const aspectClass =
-  item.orientation === "vertical"
-    ? "aspect-[9/16]"
-    : item.orientation === "square"
-    ? "aspect-square"
-    : "aspect-video";
+  
 
   <div
   className={`relative w-full ${aspectClass}`}
