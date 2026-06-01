@@ -77,28 +77,57 @@ const Home = ({ selectedTag, searchQuery }) => {
             className="overflow-hidden rounded-lg shadow-lg mb-4"
           >
             {item.isVideo ? (
-              <video
-                src={
-                  item.url.startsWith("http")
-                    ? item.url
-                    : `${API_BASE}${item.url}`
-                }
-                controls
-                className="w-full h-auto object-cover"
-              />
-            ) : (
-              <img
-                src={
-                  item.url.startsWith("http")
-                    ? item.url
-                    : `${API_BASE}${item.url}`
-                }
-                alt={item.title || "Media"}
-                className="w-full h-auto object-cover"
-                loading="lazy"
-                onError={(e) => (e.target.src = "/fallback.png")}
-              />
-            )}
+
+  (() => {
+
+    const mediaUrl =
+      item.url.startsWith("http")
+        ? item.url
+        : `${API_BASE}${item.url}`;
+
+    const aspectClass =
+      item.orientation === "vertical"
+        ? "aspect-[9/16]"
+        : item.orientation === "square"
+        ? "aspect-square"
+        : "aspect-video";
+
+    const isYoutube =
+      mediaUrl.includes("youtube.com/embed") ||
+      mediaUrl.includes("youtu.be");
+
+    const isDrive =
+      mediaUrl.includes("drive.google.com");
+
+    if (isYoutube || isDrive) {
+      return (
+        <div
+          className={`relative w-full ${aspectClass}`}
+        >
+          <iframe
+            src={mediaUrl}
+            title={item.title}
+            className="absolute inset-0 w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      );
+    }
+
+    return (
+      <video
+        src={mediaUrl}
+        controls
+        preload="metadata"
+        playsInline
+        className="w-full"
+      />
+    );
+
+  })()
+
+) : (
           </div>
         ))}
       </Masonry>
