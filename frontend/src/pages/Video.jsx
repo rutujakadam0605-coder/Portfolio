@@ -156,10 +156,10 @@ export default function Video({
                 : "aspect-video";
 
             const isIframeVideo =
-              videoUrl.includes(
+              mediaUrl.includes(
                 "youtube.com/embed"
               ) ||
-              videoUrl.includes(
+              mediaUrl.includes(
                 "drive.google.com"
               );
 
