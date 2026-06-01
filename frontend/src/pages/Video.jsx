@@ -110,7 +110,8 @@ export default function Video({
               ) ||
               videoUrl.includes(
                 "vimeo.com"
-              );
+              ) ||
+ videoUrl.includes("drive.google.com");
 
             return (
               <div
@@ -123,31 +124,26 @@ export default function Video({
 
                 {isExternalVideo ? (
 
-                  <div
-  className={`relative w-full ${aspectClass}`}
->
+  <div
+    className={`relative w-full ${aspectClass}`}
+  >
+    <iframe
+      src={videoUrl}
+      title={item.title || "Video"}
+      className="absolute inset-0 w-full h-full"
+      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+    />
+  </div>
 
-  <iframe
-    src={videoUrl}
-    title={
-      item.title ||
-      "Video"
-    }
-    className="absolute inset-0 w-full h-full"
-    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowFullScreen
-  />
-
-</div>
-
-                ) : (
+) : (
 
                   <video
                     controls
-                    preload="metadata"
+                    preload="auto"
                     autoPlay={false}
                     playsInline
-                    className="w-full rounded-xl"
+                    className="w-full"
                   >
 
                     <source
