@@ -32,6 +32,7 @@ const AdminLayout = () => {
   const [tags, setTags] = useState([]);
   const [file, setFile] = useState(null);
   const [externalUrl, setExternalUrl] = useState("");
+  const [orientation, setOrientation] = useState("horizontal");
   const [notification, setNotification] = useState("");
 
   const showNotification = (msg) => {
@@ -186,6 +187,7 @@ const AdminLayout = () => {
         type.toLowerCase(),
 
       tags,
+      orientation,
 
       url:
         finalUrl,
@@ -401,6 +403,31 @@ const AdminLayout = () => {
           ))}
 
         </div>
+
+        {type === "Video" && (
+
+  <select
+    value={orientation}
+    onChange={(e) =>
+      setOrientation(e.target.value)
+    }
+    className="w-full p-2 rounded bg-gray-700"
+  >
+    <option value="horizontal">
+      Horizontal (16:9)
+    </option>
+
+    <option value="vertical">
+      Vertical (9:16)
+    </option>
+
+    <option value="square">
+      Square (1:1)
+    </option>
+
+  </select>
+
+)}
 
         <input
           type="file"
