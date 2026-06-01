@@ -487,18 +487,19 @@ const AdminLayout = () => {
 
               {item.isVideo ? (
 
-  
+  mediaUrl.includes("youtube.com/embed") ||
+  mediaUrl.includes("drive.google.com") ? (
 
-  <div
-  className={`relative w-full ${aspectClass}`}
->
-  <iframe
-    src={mediaUrl}
-    title={item.title}
-    className="absolute inset-0 w-full h-full"
-    allowFullScreen
-  />
-</div>
+    <div
+      className={`relative w-full ${aspectClass}`}
+    >
+      <iframe
+        src={mediaUrl}
+        title={item.title}
+        className="absolute inset-0 w-full h-full"
+        allowFullScreen
+      />
+    </div>
 
   ) : (
 
@@ -506,7 +507,6 @@ const AdminLayout = () => {
       src={mediaUrl}
       controls
       preload="metadata"
-      autoPlay={false}
       playsInline
       className="w-full"
     />
@@ -514,12 +514,14 @@ const AdminLayout = () => {
   )
 
 ) : (
-                <img
-                  src={mediaUrl}
-                  alt={item.title}
-                  className="w-full"
-                />
-              )}
+
+  <img
+    src={mediaUrl}
+    alt={item.title}
+    className="w-full"
+  />
+
+)}
 
               <div className="p-2">
 
