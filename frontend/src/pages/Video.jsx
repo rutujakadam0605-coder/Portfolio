@@ -13,7 +13,6 @@ export default function Video({
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const res =
           await axios.get(
             `${API_BASE}/api/media`
@@ -26,9 +25,7 @@ export default function Video({
               "video"
           )
         );
-
       } catch (err) {
-
         console.error(
           "Failed to fetch videos:",
           err
@@ -87,31 +84,32 @@ export default function Video({
         {filteredItems.map(
           (item) => {
 
-            const aspectClass =
-  item.orientation === "vertical"
-    ? "aspect-[9/16]"
-    : item.orientation === "square"
-    ? "aspect-square"
-    : "aspect-video";
-
             const videoUrl =
-              item.url.startsWith(
-                "http"
-              )
+              item.url.startsWith("http")
                 ? item.url
                 : `${API_BASE}${item.url}`;
 
-            const isExternalVideo =
+            const aspectClass =
+              item.orientation ===
+              "vertical"
+                ? "aspect-[9/16]"
+                : item.orientation ===
+                  "square"
+                ? "aspect-square"
+                : "aspect-video";
+
+            const isYoutube =
               videoUrl.includes(
                 "youtube.com"
               ) ||
               videoUrl.includes(
                 "youtu.be"
-              ) ||
+              );
+
+            const isDrive =
               videoUrl.includes(
-                "vimeo.com"
-              ) ||
- videoUrl.includes("drive.google.com");
+                "drive.google.com"
+              );
 
             return (
               <div
@@ -122,42 +120,40 @@ export default function Video({
                 className="rounded-xl overflow-hidden shadow bg-zinc-900"
               >
 
-                {isExternalVideo ? (
+                {/* YouTube & Drive */}
 
-  <div
-    className={`relative w-full ${aspectClass}`}
-  >
-    <iframe
-      src={videoUrl}
-      title={item.title || "Video"}
-      className="absolute inset-0 w-full h-full"
-      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-    />
-  </div>
+                {isYoutube ||
+                isDrive ? (
 
-) : (
+                  <div
+                    className={`relative w-full ${aspectClass}`}
+                  >
+                    <iframe
+                      src={videoUrl}
+                      title={
+                        item.title ||
+                        "Video"
+                      }
+                      className="absolute inset-0 w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+
+                ) : (
+
+                  /* Uploaded MP4 */
 
                   <video
+                    src={videoUrl}
                     controls
                     preload="auto"
-                    autoPlay={false}
                     playsInline
-                    className="w-full"
+                    className="w-full rounded-xl"
                   >
-
-                    <source
-                      src={
-                        videoUrl
-                      }
-                      type="video/mp4"
-                    />
-
                     Your browser
-                    does not
-                    support
+                    does not support
                     video.
-
                   </video>
 
                 )}
