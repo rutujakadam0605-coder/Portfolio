@@ -143,8 +143,7 @@ export default function Video({
                 ? item.url
                 : `${API_BASE}${item.url}`;
 
-            const videoUrl =
-              getEmbedUrl(rawUrl);
+            const videoUrl = rawUrl;
 
             const aspectClass =
               item.orientation ===
@@ -156,12 +155,8 @@ export default function Video({
                 : "aspect-video";
 
             const isIframeVideo =
-              mediaUrl.includes(
-                "youtube.com/embed"
-              ) ||
-              mediaUrl.includes(
-                "drive.google.com"
-              );
+  item.url.includes("youtube") ||
+  item.url.includes("drive.google");
 
             return (
               <div
