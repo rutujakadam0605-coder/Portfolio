@@ -7,6 +7,10 @@ const MediaSchema = new mongoose.Schema(
     tags: [String],
     url: String,
     isVideo: Boolean,
+    orientation: {
+     type: String,
+     default: "horizontal",
+  }
   },
   { timestamps: true }
 );
