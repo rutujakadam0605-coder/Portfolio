@@ -7,17 +7,17 @@ export default function Video({
   selectedTag,
   searchQuery,
 }) {
-   console.log("VIDEO COMPONENT LOADED");
+  console.log("VIDEO COMPONENT LOADED");
+
   const [videosItems, setVideosItems] =
     useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res =
-          await axios.get(
-            `${API_BASE}/api/media`
-          );
+        const res = await axios.get(
+          `${API_BASE}/api/media`
+        );
 
         setVideosItems(
           (res.data || []).filter(
@@ -37,12 +37,13 @@ export default function Video({
     fetchData();
   }, []);
 
-  let filteredItems =
-    videosItems;
+  let filteredItems = videosItems;
+
+  /* Tag Filter */
 
   if (
-     &&
-     !== "All"
+    selectedTag &&
+    selectedTag !== "All"
   ) {
     filteredItems =
       filteredItems.filter(
@@ -50,10 +51,12 @@ export default function Video({
           item.tags?.some(
             (tag) =>
               tag.toLowerCase() ===
-              .toLowerCase()
+              selectedTag.toLowerCase()
           )
       );
   }
+
+  /* Search Filter */
 
   if (
     searchQuery &&
@@ -99,7 +102,8 @@ export default function Video({
       url.includes("youtu.be/")
     ) {
       const id =
-        url.split("youtu.be/")[1]
+        url
+          .split("youtu.be/")[1]
           ?.split("?")[0];
 
       return `https://www.youtube.com/embed/${id}`;
@@ -130,11 +134,18 @@ export default function Video({
         {filteredItems.map(
           (item) => {
 
-            console.log("MEDIA ITEM", item);
-console.log("URL", item.url);
+            console.log(
+              "MEDIA ITEM",
+              item
+            );
+
+            console.log(
+              "URL",
+              item.url
+            );
 
             const rawUrl =
-              item.url.startsWith(
+              item.url?.startsWith(
                 "http"
               )
                 ? item.url
@@ -142,6 +153,11 @@ console.log("URL", item.url);
 
             const videoUrl =
               getEmbedUrl(rawUrl);
+
+            console.log(
+              "EMBED URL",
+              videoUrl
+            );
 
             const aspectClass =
               item.orientation ===
