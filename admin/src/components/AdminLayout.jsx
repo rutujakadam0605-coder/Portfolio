@@ -514,12 +514,12 @@ const AdminLayout = () => {
   preload="auto"
   playsInline
   controlsList="nodownload"
-  className="w-full h-full object-cover"
-  style={{
-    imageRendering: "auto"
-  }}
+  className="w-full"
 >
-  <source src={mediaUrl} type="video/mp4" />
+  <source
+    src={mediaUrl}
+    type="video/mp4"
+  />
 </video>
 
   )
