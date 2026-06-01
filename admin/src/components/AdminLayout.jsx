@@ -513,7 +513,7 @@ const AdminLayout = () => {
       controls
       preload="metadata"
       playsInline
-      className="w-full"
+      className="w-full h-full object-cover"
     />
 
   )
