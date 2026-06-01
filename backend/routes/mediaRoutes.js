@@ -251,6 +251,7 @@ router.post(
         tags,
         type,
         isVideo,
+        orientation
       } = req.body;
 
       const mediaDoc =
@@ -262,6 +263,7 @@ router.post(
     isVideo:
       isVideo === "true" ||
       isVideo === true,
+     orientation,
   });
 
       return res
