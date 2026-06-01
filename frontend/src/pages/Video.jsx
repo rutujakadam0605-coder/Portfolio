@@ -121,6 +121,9 @@ export default function Video({
     return url;
   };
 
+  console.log("ITEM", item);
+console.log("URL", videoUrl);
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
 
