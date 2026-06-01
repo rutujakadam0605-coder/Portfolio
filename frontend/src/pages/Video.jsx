@@ -7,6 +7,7 @@ export default function Video({
   selectedTag,
   searchQuery,
 }) {
+   console.log("VIDEO COMPONENT LOADED");
   const [videosItems, setVideosItems] =
     useState([]);
 
@@ -40,8 +41,8 @@ export default function Video({
     videosItems;
 
   if (
-    selectedTag &&
-    selectedTag !== "All"
+     &&
+     !== "All"
   ) {
     filteredItems =
       filteredItems.filter(
@@ -49,7 +50,7 @@ export default function Video({
           item.tags?.some(
             (tag) =>
               tag.toLowerCase() ===
-              selectedTag.toLowerCase()
+              .toLowerCase()
           )
       );
   }
@@ -121,9 +122,6 @@ export default function Video({
     return url;
   };
 
-  console.log("ITEM", item);
-console.log("URL", videoUrl);
-
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
 
@@ -131,6 +129,9 @@ console.log("URL", videoUrl);
 
         {filteredItems.map(
           (item) => {
+
+            console.log("MEDIA ITEM", item);
+console.log("URL", item.url);
 
             const rawUrl =
               item.url.startsWith(
