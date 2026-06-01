@@ -44,21 +44,14 @@ const Home = ({ selectedTag, searchQuery }) => {
         selectedTag !== "All"
       ) {
 
-        const typeMatch = [
-          "graphic",
-          "video",
-          "uidesign",
-          "logos",
-        ].includes(
-          selectedTag.toLowerCase()
-        )
-          ? item.type?.toLowerCase() ===
-            selectedTag.toLowerCase()
-          : item.tags?.some(
-              (tag) =>
-                tag.toLowerCase() ===
-                selectedTag.toLowerCase()
-            );
+        const typeMatch =
+  item.type?.toLowerCase() ===
+    selectedTag.toLowerCase() ||
+  item.tags?.some(
+    (tag) =>
+      tag.toLowerCase() ===
+      selectedTag.toLowerCase()
+  );
 
         if (!typeMatch) {
           return false;
