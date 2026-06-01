@@ -115,6 +115,11 @@ const AdminLayout = () => {
         type === "Video"
       );
 
+      formData.append(
+       "orientation",
+       orientation
+     );
+
       await axios.post(
         `${API_BASE}/api/media/upload`,
         formData,
