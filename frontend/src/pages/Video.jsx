@@ -39,8 +39,6 @@ export default function Video({
   let filteredItems =
     videosItems;
 
-  /* Tag filter */
-
   if (
     selectedTag &&
     selectedTag !== "All"
@@ -55,8 +53,6 @@ export default function Video({
           )
       );
   }
-
-  /* Search filter */
 
   if (
     searchQuery &&
@@ -76,8 +72,55 @@ export default function Video({
       );
   }
 
-  console.log("VIDEO URL:", videoUrl);
-console.log("ITEM:", item);
+  const getEmbedUrl = (url) => {
+    if (!url) return url;
+
+    /* Google Drive */
+
+    if (
+      url.includes(
+        "drive.google.com/file/d/"
+      )
+    ) {
+      const match =
+        url.match(
+          /\/file\/d\/([^/]+)/
+        );
+
+      if (match) {
+        return `https://drive.google.com/file/d/${match[1]}/preview`;
+      }
+    }
+
+    /* youtu.be */
+
+    if (
+      url.includes("youtu.be/")
+    ) {
+      const id =
+        url.split("youtu.be/")[1]
+          ?.split("?")[0];
+
+      return `https://www.youtube.com/embed/${id}`;
+    }
+
+    /* youtube watch */
+
+    if (
+      url.includes(
+        "youtube.com/watch?v="
+      )
+    ) {
+      const id =
+        new URL(url)
+          .searchParams.get("v");
+
+      return `https://www.youtube.com/embed/${id}`;
+    }
+
+    return url;
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
 
@@ -86,10 +129,15 @@ console.log("ITEM:", item);
         {filteredItems.map(
           (item) => {
 
-            const videoUrl =
-              item.url.startsWith("http")
+            const rawUrl =
+              item.url.startsWith(
+                "http"
+              )
                 ? item.url
                 : `${API_BASE}${item.url}`;
+
+            const videoUrl =
+              getEmbedUrl(rawUrl);
 
             const aspectClass =
               item.orientation ===
@@ -100,15 +148,10 @@ console.log("ITEM:", item);
                 ? "aspect-square"
                 : "aspect-video";
 
-            const isYoutube =
+            const isExternal =
               videoUrl.includes(
-                "youtube.com"
+                "youtube.com/embed"
               ) ||
-              videoUrl.includes(
-                "youtu.be"
-              );
-
-            const isDrive =
               videoUrl.includes(
                 "drive.google.com"
               );
@@ -122,10 +165,7 @@ console.log("ITEM:", item);
                 className="rounded-xl overflow-hidden shadow bg-zinc-900"
               >
 
-                {/* YouTube & Drive */}
-
-                {isYoutube ||
-                isDrive ? (
+                {isExternal ? (
 
                   <div
                     className={`relative w-full ${aspectClass}`}
@@ -144,19 +184,13 @@ console.log("ITEM:", item);
 
                 ) : (
 
-                  /* Uploaded MP4 */
-
                   <video
                     src={videoUrl}
                     controls
                     preload="auto"
                     playsInline
-                    className="w-full rounded-xl"
-                  >
-                    Your browser
-                    does not support
-                    video.
-                  </video>
+                    className="w-full"
+                  />
 
                 )}
 
