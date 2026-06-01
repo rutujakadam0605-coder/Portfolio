@@ -76,6 +76,8 @@ export default function Video({
       );
   }
 
+  console.log("VIDEO URL:", videoUrl);
+console.log("ITEM:", item);
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
 
