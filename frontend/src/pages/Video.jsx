@@ -7,7 +7,8 @@ export default function Video({
   selectedTag,
   searchQuery,
 }) {
-  console.log("VIDEO COMPONENT LOADED");
+   console.log("VIDEO COMPONENT LOADED");
+  alert("VIDEO COMPONENT LOADED");
 
   const [videosItems, setVideosItems] =
     useState([]);
