@@ -4,6 +4,7 @@ export default function CustomVideoPlayer({
   src,
   className = "",
 }) {
+  console.log("CUSTOM PLAYER LOADED", src);
   const videoRef = useRef(null);
 
   const [isPlaying, setIsPlaying] =
