@@ -9,6 +9,12 @@ export default function Video({
 }) {
   const [videosItems, setVideosItems] =
     useState([]);
+  
+  const [playingVideo, setPlayingVideo] =
+  useState(null);
+
+const [showControls, setShowControls] =
+  useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -186,16 +192,90 @@ export default function Video({
 
                 ) : (
 
-                  <video
-                   src={mediaUrl}
-                   controls
-                   controlsList="nodownload noplaybackrate"
-                   preload="metadata"
-                   playsInline
-                   muted
-                   autoPlay={false}
-                   className="w-full"
-                />
+                  <div className="relative">
+
+  <video
+    src={mediaUrl}
+    playsInline
+    loop
+    className="w-full cursor-pointer"
+    ref={(el) => {
+      if (el)
+        window[
+          `video_${item._id}`
+        ] = el;
+    }}
+    onClick={() => {
+
+      const video =
+        window[
+          `video_${item._id}`
+        ];
+
+      if (video.paused) {
+        video.play();
+
+        setPlayingVideo(
+          item._id
+        );
+      } else {
+        video.pause();
+
+        setPlayingVideo(
+          null
+        );
+      }
+
+      setShowControls(
+        item._id
+      );
+
+      setTimeout(() => {
+        setShowControls(
+          null
+        );
+      }, 2000);
+
+    }}
+  />
+
+  {showControls ===
+    item._id && (
+
+    <button
+      className="absolute inset-0 flex items-center justify-center text-white text-5xl bg-black/20"
+      onClick={() => {
+
+        const video =
+          window[
+            `video_${item._id}`
+          ];
+
+        if (video.paused) {
+          video.play();
+
+          setPlayingVideo(
+            item._id
+          );
+        } else {
+          video.pause();
+
+          setPlayingVideo(
+            null
+          );
+        }
+
+      }}
+    >
+      {playingVideo ===
+      item._id
+        ? "⏸"
+        : "▶"}
+    </button>
+
+  )}
+
+</div>
 
                 )}
 
