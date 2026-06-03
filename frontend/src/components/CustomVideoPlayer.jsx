@@ -44,12 +44,12 @@ export default function CustomVideoPlayer({
       onClick={togglePlay}
     >
       <video
-        ref={videoRef}
-        src={src}
-        playsInline
-        preload="metadata"
-        className="w-full"
-      />
+  ref={videoRef}
+  src={src}
+  playsInline
+  preload="metadata"
+  className="w-full border-[8px] border-red-500"
+/>
 
       {showControls && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/20">
