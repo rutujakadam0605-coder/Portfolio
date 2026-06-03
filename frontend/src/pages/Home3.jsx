@@ -167,9 +167,9 @@ const Home = ({ selectedTag, searchQuery }) => {
 
                 ) : (
 
-                  <div className="bg-red-600 text-white p-10 text-center">
-  CUSTOM PLAYER ACTIVE
-</div>
+                  <CustomVideoPlayer
+                    src={mediaUrl}
+                  />
 
                 )
 
