@@ -165,10 +165,8 @@ const Home = ({ selectedTag, searchQuery }) => {
 
                   <video
                      src={mediaUrl}
-                     autoPlay
-                     muted
-                     loop
                      playsInline
+                     preload="metadata"
                      className="w-full"
                   />
 
