@@ -164,12 +164,12 @@ const Home = ({ selectedTag, searchQuery }) => {
                 ) : (
 
                   <video
-                     src={mediaUrl}
-                     controls
-                     playsInline
-                     preload="metadata"
-                     className="w-full"
-                  />
+  src={mediaUrl}
+  controls
+  preload="metadata"
+  playsInline
+  className="w-full"
+/>
 
                 )
 
