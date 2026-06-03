@@ -45,13 +45,13 @@ const Home = ({ selectedTag, searchQuery }) => {
       ) {
 
         const typeMatch =
-  item.type?.toLowerCase() ===
-    selectedTag.toLowerCase() ||
-  item.tags?.some(
-    (tag) =>
-      tag.toLowerCase() ===
-      selectedTag.toLowerCase()
-  );
+          item.type?.toLowerCase() ===
+            selectedTag.toLowerCase() ||
+          item.tags?.some(
+            (tag) =>
+              tag.toLowerCase() ===
+              selectedTag.toLowerCase()
+          );
 
         if (!typeMatch) {
           return false;
@@ -116,7 +116,7 @@ const Home = ({ selectedTag, searchQuery }) => {
               ? "aspect-[9/16]"
               : item.orientation === "square"
               ? "aspect-square"
-              : "aspect-";
+              : "aspect-video";
 
           const isYoutube =
             mediaUrl.includes(
@@ -141,7 +141,9 @@ const Home = ({ selectedTag, searchQuery }) => {
               className="overflow-hidden rounded-lg shadow-lg mb-4"
             >
 
-              {item.is ? (
+              {(item.isVideo === true ||
+                item.isVideo === "true" ||
+                item.type?.toLowerCase() === "video") ? (
 
                 isYoutube ||
                 isDrive ? (
@@ -153,7 +155,7 @@ const Home = ({ selectedTag, searchQuery }) => {
                       src={mediaUrl}
                       title={
                         item.title ||
-                        ""
+                        "Video"
                       }
                       className="absolute inset-0 w-full h-full"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -164,12 +166,12 @@ const Home = ({ selectedTag, searchQuery }) => {
                 ) : (
 
                   <video
-  src={mediaUrl}
-  controls
-  preload="metadata"
-  playsInline
-  className="w-full"
-/>
+                    src={mediaUrl}
+                    controls
+                    preload="metadata"
+                    playsInline
+                    className="w-full"
+                  />
 
                 )
 
