@@ -116,7 +116,7 @@ const Home = ({ selectedTag, searchQuery }) => {
               ? "aspect-[9/16]"
               : item.orientation === "square"
               ? "aspect-square"
-              : "aspect-video";
+              : "aspect-";
 
           const isYoutube =
             mediaUrl.includes(
@@ -141,7 +141,7 @@ const Home = ({ selectedTag, searchQuery }) => {
               className="overflow-hidden rounded-lg shadow-lg mb-4"
             >
 
-              {item.isVideo ? (
+              {item.is ? (
 
                 isYoutube ||
                 isDrive ? (
@@ -153,7 +153,7 @@ const Home = ({ selectedTag, searchQuery }) => {
                       src={mediaUrl}
                       title={
                         item.title ||
-                        "Video"
+                        ""
                       }
                       className="absolute inset-0 w-full h-full"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -165,7 +165,6 @@ const Home = ({ selectedTag, searchQuery }) => {
 
                   <video
                     src={mediaUrl}
-                    controls
                     preload="metadata"
                     playsInline
                     className="w-full"
