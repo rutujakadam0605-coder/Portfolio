@@ -187,12 +187,15 @@ export default function Video({
                 ) : (
 
                   <video
-                    src={videoUrl}
-                    controls
-                    preload="metadata"
-                    playsInline
-                    className="w-full"
-                  />
+                   src={mediaUrl}
+                   controls
+                   controlsList="nodownload noplaybackrate"
+                   preload="metadata"
+                   playsInline
+                   muted
+                   autoPlay={false}
+                   className="w-full"
+                />
 
                 )}
 
