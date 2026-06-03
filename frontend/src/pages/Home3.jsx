@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Masonry from "react-masonry-css";
+import CustomVideoPlayer from "../components/CustomVideoPlayer";
 
 const breakpointColumnsObj = {
   default: 4,
@@ -165,12 +166,8 @@ const Home = ({ selectedTag, searchQuery }) => {
 
                 ) : (
 
-                  <video
+                  <CustomVideoPlayer
                     src={mediaUrl}
-                    controls
-                    preload="metadata"
-                    playsInline
-                    className="w-full"
                   />
 
                 )
