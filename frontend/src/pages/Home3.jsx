@@ -3,6 +3,8 @@ import axios from "axios";
 import Masonry from "react-masonry-css";
 import CustomVideoPlayer from "../components/CustomVideoPlayer";
 
+console.log("HOME3 LOADED");
+
 const breakpointColumnsObj = {
   default: 4,
   1100: 3,
@@ -97,7 +99,9 @@ const Home = ({ selectedTag, searchQuery }) => {
   }
 
   return (
-    console.log("HOME3 LOADED");
+    <div style={{background:"red",color:"white",padding:"50px"}}>
+    HOME3 TEST
+  </div>
     <div className="max-w-6xl mx-auto px-4 py-10">
 
       <Masonry
