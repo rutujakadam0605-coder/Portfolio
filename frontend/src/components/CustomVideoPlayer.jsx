@@ -4,16 +4,13 @@ export default function CustomVideoPlayer({
   src,
   className = "",
 }) {
-  console.log("CUSTOM PLAYER LOADED", src);
   const videoRef = useRef(null);
 
   const [isPlaying, setIsPlaying] =
     useState(false);
 
   const [showControls, setShowControls] =
-    useState(true);
-
-  let hideTimer = null;
+    useState(false);
 
   const togglePlay = () => {
     const video =
@@ -31,9 +28,7 @@ export default function CustomVideoPlayer({
 
     setShowControls(true);
 
-    clearTimeout(hideTimer);
-
-    hideTimer = setTimeout(() => {
+    setTimeout(() => {
       setShowControls(false);
     }, 2000);
   };
@@ -44,24 +39,20 @@ export default function CustomVideoPlayer({
       onClick={togglePlay}
     >
       <video
-  ref={videoRef}
-  src={src}
-  playsInline
-  preload="metadata"
-  className="w-full border-[8px] border-red-500"
-/>
+        ref={videoRef}
+        src={src}
+        playsInline
+        preload="metadata"
+        className="w-full"
+      />
 
       {showControls && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-
-          <button
-            className="w-20 h-20 rounded-full bg-black/60 text-white text-3xl flex items-center justify-center"
-          >
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
+          <div className="w-20 h-20 rounded-full bg-black/60 text-white text-3xl flex items-center justify-center">
             {isPlaying
               ? "❚❚"
               : "▶"}
-          </button>
-
+          </div>
         </div>
       )}
     </div>
