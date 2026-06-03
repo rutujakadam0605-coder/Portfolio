@@ -164,10 +164,17 @@ const Home = ({ selectedTag, searchQuery }) => {
                 ) : (
 
                   <video
-                    src={mediaUrl}
-                    preload="metadata"
-                    playsInline
-                    className="w-full"
+                     src={mediaUrl}
+  playsInline
+  preload="metadata"
+  onClick={(e) => {
+    if (e.target.paused) {
+      e.target.play();
+    } else {
+      e.target.pause();
+    }
+  }}
+  className="w-full"
                   />
 
                 )
