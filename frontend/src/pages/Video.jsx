@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import CustomVideoPlayer from "../components/CustomVideoPlayer";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -191,102 +192,9 @@ export default function Video({
 
                 ) : (
 
-                  <div className="relative">
-
-                    <video
-                      src={videoUrl}
-                      playsInline
-                      preload="metadata"
-                      className="w-full cursor-pointer"
-                      ref={(el) => {
-                        if (el)
-                          window[
-                            `video_${item._id}`
-                          ] = el;
-                      }}
-                      onClick={() => {
-
-                        const video =
-                          window[
-                            `video_${item._id}`
-                          ];
-
-                        if (!video)
-                          return;
-
-                        if (
-                          video.paused
-                        ) {
-                          video.play();
-                          setPlayingVideo(
-                            item._id
-                          );
-                        } else {
-                          video.pause();
-                          setPlayingVideo(
-                            null
-                          );
-                        }
-
-                        setShowControls(
-                          item._id
-                        );
-
-                        setTimeout(
-                          () => {
-                            setShowControls(
-                              null
-                            );
-                          },
-                          2000
-                        );
-                      }}
-                    />
-
-                    {showControls ===
-                      item._id && (
-
-                      <button
-                        className="absolute inset-0 flex items-center justify-center text-white text-5xl bg-black/20"
-                        onClick={(
-                          e
-                        ) => {
-                          e.stopPropagation();
-
-                          const video =
-                            window[
-                              `video_${item._id}`
-                            ];
-
-                          if (
-                            !video
-                          )
-                            return;
-
-                          if (
-                            video.paused
-                          ) {
-                            video.play();
-                            setPlayingVideo(
-                              item._id
-                            );
-                          } else {
-                            video.pause();
-                            setPlayingVideo(
-                              null
-                            );
-                          }
-                        }}
-                      >
-                        {playingVideo ===
-                        item._id
-                          ? "⏸"
-                          : "▶"}
-                      </button>
-
-                    )}
-
-                  </div>
+                  <CustomVideoPlayer
+                    src={videoUrl}
+                  />
 
                 )}
 
