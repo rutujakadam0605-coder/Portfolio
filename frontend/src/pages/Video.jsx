@@ -9,12 +9,12 @@ export default function Video({
 }) {
   const [videosItems, setVideosItems] =
     useState([]);
-  
-  const [playingVideo, setPlayingVideo] =
-  useState(null);
 
-const [showControls, setShowControls] =
-  useState(null);
+  const [playingVideo, setPlayingVideo] =
+    useState(null);
+
+  const [showControls, setShowControls] =
+    useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +32,6 @@ const [showControls, setShowControls] =
           );
 
         setVideosItems(videos);
-
       } catch (err) {
         console.error(
           "Failed to fetch videos:",
@@ -47,8 +46,7 @@ const [showControls, setShowControls] =
   let filteredItems =
     videosItems;
 
-  /* Tag filter */
-
+  // Tag Filter
   if (
     selectedTag &&
     selectedTag !== "All"
@@ -64,8 +62,7 @@ const [showControls, setShowControls] =
       );
   }
 
-  /* Search filter */
-
+  // Search Filter
   if (
     searchQuery &&
     searchQuery.trim() !== ""
@@ -87,8 +84,7 @@ const [showControls, setShowControls] =
   const getEmbedUrl = (url) => {
     if (!url) return "";
 
-    /* Google Drive */
-
+    // Google Drive
     if (
       url.includes(
         "drive.google.com/file/d/"
@@ -104,8 +100,7 @@ const [showControls, setShowControls] =
       }
     }
 
-    /* YouTube Short URL */
-
+    // youtu.be
     if (
       url.includes("youtu.be/")
     ) {
@@ -117,8 +112,7 @@ const [showControls, setShowControls] =
       return `https://www.youtube.com/embed/${id}`;
     }
 
-    /* YouTube Watch URL */
-
+    // youtube watch
     if (
       url.includes(
         "youtube.com/watch?v="
@@ -149,7 +143,8 @@ const [showControls, setShowControls] =
                 ? item.url
                 : `${API_BASE}${item.url}`;
 
-            const videoUrl = rawUrl;
+            const videoUrl =
+              getEmbedUrl(rawUrl);
 
             const aspectClass =
               item.orientation ===
@@ -161,8 +156,12 @@ const [showControls, setShowControls] =
                 : "aspect-video";
 
             const isIframeVideo =
-  item.url.includes("youtube") ||
-  item.url.includes("drive.google");
+              videoUrl.includes(
+                "youtube.com/embed"
+              ) ||
+              videoUrl.includes(
+                "drive.google.com"
+              );
 
             return (
               <div
@@ -194,88 +193,100 @@ const [showControls, setShowControls] =
 
                   <div className="relative">
 
-  <video
-    src={mediaUrl}
-    playsInline
-    loop
-    className="w-full cursor-pointer"
-    ref={(el) => {
-      if (el)
-        window[
-          `video_${item._id}`
-        ] = el;
-    }}
-    onClick={() => {
+                    <video
+                      src={videoUrl}
+                      playsInline
+                      preload="metadata"
+                      className="w-full cursor-pointer"
+                      ref={(el) => {
+                        if (el)
+                          window[
+                            `video_${item._id}`
+                          ] = el;
+                      }}
+                      onClick={() => {
 
-      const video =
-        window[
-          `video_${item._id}`
-        ];
+                        const video =
+                          window[
+                            `video_${item._id}`
+                          ];
 
-      if (video.paused) {
-        video.play();
+                        if (!video)
+                          return;
 
-        setPlayingVideo(
-          item._id
-        );
-      } else {
-        video.pause();
+                        if (
+                          video.paused
+                        ) {
+                          video.play();
+                          setPlayingVideo(
+                            item._id
+                          );
+                        } else {
+                          video.pause();
+                          setPlayingVideo(
+                            null
+                          );
+                        }
 
-        setPlayingVideo(
-          null
-        );
-      }
+                        setShowControls(
+                          item._id
+                        );
 
-      setShowControls(
-        item._id
-      );
+                        setTimeout(
+                          () => {
+                            setShowControls(
+                              null
+                            );
+                          },
+                          2000
+                        );
+                      }}
+                    />
 
-      setTimeout(() => {
-        setShowControls(
-          null
-        );
-      }, 2000);
+                    {showControls ===
+                      item._id && (
 
-    }}
-  />
+                      <button
+                        className="absolute inset-0 flex items-center justify-center text-white text-5xl bg-black/20"
+                        onClick={(
+                          e
+                        ) => {
+                          e.stopPropagation();
 
-  {showControls ===
-    item._id && (
+                          const video =
+                            window[
+                              `video_${item._id}`
+                            ];
 
-    <button
-      className="absolute inset-0 flex items-center justify-center text-white text-5xl bg-black/20"
-      onClick={() => {
+                          if (
+                            !video
+                          )
+                            return;
 
-        const video =
-          window[
-            `video_${item._id}`
-          ];
+                          if (
+                            video.paused
+                          ) {
+                            video.play();
+                            setPlayingVideo(
+                              item._id
+                            );
+                          } else {
+                            video.pause();
+                            setPlayingVideo(
+                              null
+                            );
+                          }
+                        }}
+                      >
+                        {playingVideo ===
+                        item._id
+                          ? "⏸"
+                          : "▶"}
+                      </button>
 
-        if (video.paused) {
-          video.play();
+                    )}
 
-          setPlayingVideo(
-            item._id
-          );
-        } else {
-          video.pause();
-
-          setPlayingVideo(
-            null
-          );
-        }
-
-      }}
-    >
-      {playingVideo ===
-      item._id
-        ? "⏸"
-        : "▶"}
-    </button>
-
-  )}
-
-</div>
+                  </div>
 
                 )}
 
