@@ -97,6 +97,7 @@ const Home = ({ selectedTag, searchQuery }) => {
   }
 
   return (
+    console.log("HOME3 LOADED");
     <div className="max-w-6xl mx-auto px-4 py-10">
 
       <Masonry
